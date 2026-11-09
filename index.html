@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>今天喝50嵐嗎？</title>
+
+<style>
+/* ===== 主要設定 ===== */
+:root {
+    --main-color: #789b73;
+    --light-color: #edf3e9;
+    --text-color: #394638;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f5f4ec;
+    font-family: "Microsoft JhengHei", sans-serif;
+    color: var(--text-color);
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 430px;
+    background: white;
+    padding: 35px 25px;
+    border-radius: 24px;
+    text-align: center;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+}
+
+h1 {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #999;
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+.tea-icon {
+    font-size: 55px;
+    margin-bottom: 15px;
+}
+
+.result {
+    min-height: 120px;
+    background: var(--light-color);
+    border-radius: 18px;
+    margin: 20px 0;
+    padding: 25px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.result-text {
+    font-size: 25px;
+    font-weight: bold;
+    color: var(--main-color);
+}
+
+.result-sub {
+    font-size: 14px;
+    color: #899486;
+    margin-top: 10px;
+}
+
+button {
+    width: 100%;
+    border: none;
+    border-radius: 14px;
+    padding: 15px;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.2s;
+}
+
+button:active {
+    transform: scale(0.97);
+}
+
+.main-btn {
+    background: var(--main-color);
+    color: white;
+}
+
+.secondary-btn {
+    background: #f0f0e9;
+    color: #697662;
+}
+
+.hidden {
+    display: none;
+}
+
+.note {
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 25px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="tea-icon">🧋</div>
+
+    <h1>今天喝50嵐嗎？</h1>
+    <div class="subtitle">讓命運決定今天的飲料！</div>
+
+    <!-- 第一階段結果 -->
+    <div id="firstResult" class="result">
+        <div class="result-text">今天喝不喝？</div>
+        <div class="result-sub">按下按鈕，讓命運決定</div>
+    </div>
+
+    <button id="firstBtn" class="main-btn" onclick="drawDecision()">
+        幫我決定！
+    </button>
+
+    <!-- 第二階段結果 -->
+    <div id="drinkSection" class="hidden">
+
+        <div class="result">
+            <div class="result-text" id="drinkResult">
+                今天喝什麼？
+            </div>
+            <div class="result-sub" id="drinkSub">
+                再抽一次，決定你的飲料
+            </div>
+        </div>
+
+        <button class="main-btn" onclick="drawDrink()">
+            抽今天喝哪杯！
+        </button>
+
+    </div>
+
+    <!-- 重新開始 -->
+    <button class="secondary-btn hidden" id="resetBtn"
+        onclick="resetGame()">
+        重新抽籤
+    </button>
+
+    <div class="note">
+        ＊喝或不喝各 50% 機率
+    </div>
+
+</div>
+
+<script>
+
+// ===== 抽籤選項設定 =====
+
+// 第一階段：喝或不喝
+const decisions = ["喝！", "不喝！"];
+
+// 第二階段：飲料選項
+const drinks = [
+    "綠茶拿鐵",
+    "紅茶瑪奇朵",
+    "阿華田拿鐵",
+    "四季春"
+];
+
+// ===== 第一階段：決定喝不喝 =====
+
+function drawDecision() {
+
+    // 隨機抽取一個結果
+    const result = decisions[
+        Math.floor(Math.random() * decisions.length)
+    ];
+
+    const firstResult = document.getElementById("firstResult");
+    const drinkSection = document.getElementById("drinkSection");
+    const firstBtn = document.getElementById("firstBtn");
+    const resetBtn = document.getElementById("resetBtn");
+
+    if (result === "喝！") {
+
+        firstResult.innerHTML = `
+            <div class="result-text">今天喝！</div>
+            <div class="result-sub">太好了！進入飲料抽籤環節 🧋</div>
+        `;
+
+        // 顯示第二階段
+        drinkSection.classList.remove("hidden");
+
+    } else {
+
+        firstResult.innerHTML = `
+            <div class="result-text">今天不喝！</div>
+            <div class="result-sub">省下一筆錢，下次再喝吧！</div>
+        `;
+
+        // 不喝就不進入飲料抽籤
+        drinkSection.classList.add("hidden");
+    }
+
+    // 隱藏第一階段按鈕，顯示重新抽籤
+    firstBtn.classList.add("hidden");
+    resetBtn.classList.remove("hidden");
+}
+
+// ===== 第二階段：決定喝什麼 =====
+
+function drawDrink() {
+
+    // 從四種飲料中隨機抽一種
+    const result = drinks[
+        Math.floor(Math.random() * drinks.length)
+    ];
+
+    document.getElementById("drinkResult").textContent = result;
+    document.getElementById("drinkSub").textContent =
+        "命運已經幫你決定好了！";
+}
+
+// ===== 重新開始 =====
+
+function resetGame() {
+
+    document.getElementById("firstResult").innerHTML = `
+        <div class="result-text">今天喝不喝？</div>
+        <div class="result-sub">按下按鈕，讓命運決定</div>
+    `;
+
+    document.getElementById("drinkResult").textContent =
+        "今天喝什麼？";
+
+    document.getElementById("drinkSub").textContent =
+        "再抽一次，決定你的飲料";
+
+    document.getElementById("drinkSection").classList.add("hidden");
+
+    document.getElementById("firstBtn").classList.remove("hidden");
+
+    document.getElementById("resetBtn").classList.add("hidden");
+}
+
+</script>
+
+</body>
+</html>
